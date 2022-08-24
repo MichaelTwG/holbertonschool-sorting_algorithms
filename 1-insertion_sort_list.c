@@ -10,22 +10,22 @@ void insertion_sort_list(listint_t **list)
 	if (!list)
 		return;
 
-	for (actual = (*list); actual; actual = (actual->next))
+	actual = *list;
+	while(actual->next)
 	{
-		printf("adelante\n");
 		if (actual->n > (actual->next)->n)
 		{
-			swap_nodes(actual, actual->next);
-			for (actual2 = actual; actual2; actual2 = (actual2->prev))
+			swap_nodes(actual, actual->next, list);
+			print_list(*list);
+			actual2 = actual->prev;
+			while (actual2->prev && actual2->n < (actual2->prev)->n)
 			{
-				printf("atras\n");
-				if (actual2->n < (actual2->prev)->n)
-					swap_nodes(actual2, actual2->prev);
-				else
-					break;
-			}
+				swap_nodes(actual2->prev, actual2, list);
+				print_list(*list);
+			}	
 		}
-		print_list(*list);
+		else
+			actual = actual->next;
 	}
 }
 /**
@@ -34,7 +34,7 @@ void insertion_sort_list(listint_t **list)
 * @actual: actual node
 * @npc: prev or next node
 */
-void swap_nodes(listint_t *fnode, listint_t *snode)
+void swap_nodes(listint_t *fnode, listint_t *snode, listint_t **list)
 {
 	listint_t *leftnode, *rightnode;
 
@@ -58,4 +58,7 @@ void swap_nodes(listint_t *fnode, listint_t *snode)
 		fnode->next = NULL;
 	fnode->prev = snode;
 	snode->next = fnode;
+	
+	if (fnode == *list)
+		*list = snode;
 }
