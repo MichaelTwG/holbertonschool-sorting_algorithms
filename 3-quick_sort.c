@@ -46,27 +46,30 @@ int partition(int *array, int left, int right, int size)
 	int pivot = array[right];
 	int i = left, n = 0;
 
-	if (array[i] > pivot)
+	while (i < right)
 	{
-		n = i + 1;
-		while (n < right)
+		if (array[i] > pivot)
 		{
-			if (array[n] < pivot)
+			n = i + 1;
+			while (n < right)
 			{
-				swap(&array[i], &array[n]);
-				print_array(array, size);
-				break;
+				if (array[n] < pivot)
+				{
+					swap(&array[i], &array[n]);
+					print_array(array, size);
+					break;
+				}
+				n++;
 			}
-			n++;
+			if (pivot < array[i])
+			{
+				swap(&array[i], &array[right]);
+				print_array(array, size);
+			}
+			pivot = array[right];
 		}
-		if (pivot < array[i])
-		{
-			swap(&array[i], &array[right]);
-			print_array(array, size);
-		}
-		pivot = array[right];
+		i++;
 	}
-	i++;
 	return (i);
 }
 /**
@@ -86,7 +89,6 @@ void quicksortfunc(int *array, int size, int left, int right)
 		return;
 
 	part = partition(array, left, right, size);
-	printf("part >>%d<<\n", part);
 	quicksortfunc(array, size, left, part - 1);
 	quicksortfunc(array, size, part + 1, right);
 }
