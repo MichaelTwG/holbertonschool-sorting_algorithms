@@ -1,94 +1,71 @@
 #include "sort.h"
 /**
- * quick_sort - sorts an array of integers in ascensing
- * order using the quick sort algorithm
- *
- * @array: array to search
+ * swap_array - Swap two elements in a array
+ * @first_value: a value of the array
+ * @second_value: a valua of the array
+ */
+void swap_array(int *first_value, int *second_value)
+{
+	int temp_value = 0;
+
+	temp_value = *first_value;
+	*first_value = *second_value;
+	*second_value = temp_value;
+}
+/**
+ * quick_sort - quickest way to sort alogrithm
+ * @array: array of ints
  * @size: size of the array
  */
 void quick_sort(int *array, size_t size)
 {
-	int start = 0, end = size - 1;
-
-	if (!array || size == 1)
-		return;
-	quicksortfunc(array, size, start, end);
+	quick_sort_r(array, size, (int)size, array);
 }
-
 /**
-* swap - swap two fnum and snum in the array
-*
-* @fnum: first number to swap
-* @snum: second number to swap
-*/
-void swap(int *fnum, int *snum)
+ * quick_sort_r - quickest way to sort alogrithm
+ * @array: array of ints
+ * @size: size of the array
+ * @full_size: full size of original array
+ * @full_array: original array
+ */
+void quick_sort_recursive(int *array, size_t size, int full_size, int *full_array)
 {
-	int tmp;
+	int i = 0;
+	int j = 0;
+	int has_swap = 0;
+	int pivot = 0;
 
-	tmp = *snum;
-	*snum = *fnum;
-	*fnum = tmp;
-}
-
-/**
-* partition - use the last position of the array
-* as a pivot to look for smaller numbers to swap them
-*
-* @array: array
-* @left: first index of the array
-* @right: last index of the array or pivot to use
-* @size: size of the array
-*
-* Return: index of pivot
-*/
-int partition(int *array, int left, int right, int size)
-{
-	int pivot = array[right];
-	int i = left, n = 0;
-
-	while (i < right)
+	pivot = (int)size - 1;
+	while (i < pivot)
 	{
-		if (array[i] > pivot)
+		if (array[i] > array[pivot])
 		{
-			n = i + 1;
-			while (n < right)
+			has_swap = 0;
+			for (j = i + 1; j < pivot; j++)
 			{
-				if (array[n] < pivot)
+				if (array[j] < array[pivot])
 				{
-					swap(&array[i], &array[n]);
-					print_array(array, size);
+					swap_array(&array[j], &array[i]);
+					has_swap = 1;
+					print_array(full_array, full_size);
 					break;
 				}
-				n++;
 			}
-			if (pivot < array[i])
+			if (!has_swap)
 			{
-				swap(&array[i], &array[right]);
-				print_array(array, size);
+				swap_array(&array[i], &array[pivot]);
+				has_swap = 1;
+				pivot = i;
+				print_array(full_array, full_size);
+				break;
 			}
-			pivot = array[right];
 		}
 		i++;
 	}
-	return (i);
-}
-/**
-* quicksortfunc - sorts an array of integers in ascensing
-* order using the quick sort algorithm
-*
-* @array: array
-* @size: size of the array
-* @left: first index of the array
-* @right: last index of the array
-*/
-void quicksortfunc(int *array, int size, int left, int right)
-{
-	int part = 0;
+	if (pivot > 0)
+		quick_sort_recursive(array, pivot, full_size, full_array);
 
-	if (left >= right)
-		return;
-
-	part = partition(array, left, right, size);
-	quicksortfunc(array, size, left, part - 1);
-	quicksortfunc(array, size, part + 1, right);
+	if ((int)size - (pivot + 1) > 0)
+		quick_sort_recursive(&array[pivot + 1], size - (pivot + 1), full_size, full_array);
 }
+
